@@ -51,17 +51,21 @@ namespace MovieX.Pages
 
         private async void fetchMissingDatabtn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            try
+            var item = (MovieDataModel)MovieDataGrid.SelectedItem;
+            if (item.Poster == "")
             {
-                var item = (MovieDataModel)MovieDataGrid.SelectedItem;
-                MovieDataModel m = await MovieApi.GetMovieDataByNameAsync(item.Title);
-                DataAccess.DeleteMovie(item);
-                DataAccess.AddMovieData(m);
-                Movies = DataAccess.GetMovieData().ToList();
-                MovieDataGrid.ItemsSource = Movies;
-            }
-            catch
-            {
+                try
+                {
+
+                    MovieDataModel m = await MovieApi.GetMovieDataByNameAsync(item.Title);
+                    DataAccess.DeleteMovie(item);
+                    DataAccess.AddMovieData(m);
+                    Movies = DataAccess.GetMovieData().ToList();
+                    MovieDataGrid.ItemsSource = Movies;
+                }
+                catch
+                {
+                }
             }
         }
     }

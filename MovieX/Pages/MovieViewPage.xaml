@@ -70,10 +70,6 @@
                                     <TextBlock FontSize="13" Text="{Binding Runtime}" 
                                    HorizontalAlignment="Left" />
                                 </StackPanel>
-                                <StackPanel Margin="20,0,0,0">
-                                    <TextBlock FontWeight="SemiBold"
-                                           FontSize="15">Type:</TextBlock>
-                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Grid.Column="2">
