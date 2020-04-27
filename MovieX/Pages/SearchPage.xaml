@@ -1,0 +1,111 @@
+﻿<Page
+    x:Class="MovieX.Pages.SearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieX"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local1="using:MovieX"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+          ScrollViewer.HorizontalScrollMode="Auto"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          Margin="2,30,2,0"
+          Padding="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <TextBlock Text="Dare to Search"
+                   FontSize="48"
+                   FontFamily="Open Sans"
+                   Margin="0,10,0,0"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Grid.Row="1"
+                    Margin="0,20,0,0">
+            <AutoSuggestBox PlaceholderText="Search Movie by name"
+                            FontSize="25"
+                            QueryIcon="Find"
+                            x:Name="searchBox"
+                            QuerySubmitted="searchBox_QuerySubmitted"
+                            MinWidth="200"
+                            Margin="0,0,0,2"/>
+        </StackPanel>
+        <ScrollViewer MinHeight="200"
+                      Grid.Row="2" 
+                      ScrollViewer.VerticalScrollMode="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <GridView x:Name="GridResult" 
+                      SelectionMode="Single"
+                      SelectionChanged="GridResult_SelectionChanged">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="local:MovieSearchDataModel">
+                        <Grid Width="320" Height="100">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="4">
+                                <Image Source="{x:Bind Poster}" Height="100"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="4">
+                                <TextBlock TextWrapping="WrapWholeWords"
+                                           FontWeight="SemiBold" FontSize="16"
+                                           Text="{x:Bind Title}"/>
+                                <TextBlock TextWrapping="WrapWholeWords"
+                                           Text="{x:Bind Year}"/>
+                                <TextBlock TextWrapping="WrapWholeWords"
+                                           Text="{x:Bind Type}"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </ScrollViewer>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="2" Padding="10">
+            <StackPanel Orientation="Horizontal">  
+                <Image x:Name="selectedImage" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Height="350"/>
+                <StackPanel Margin="10,0,0,0" VerticalAlignment="Top"
+                            HorizontalAlignment="Left">
+                    <TextBlock TextWrapping="WrapWholeWords"
+                               MaxWidth="400"
+                               FontWeight="SemiBold" 
+                               HorizontalAlignment="Left"
+                               FontSize="20" Name="selectedTitle"/>
+                    <TextBlock Name="selectedPlot" 
+                               MaxWidth="300"
+                               HorizontalAlignment="Left"
+                               TextWrapping="WrapWholeWords"/>
+                    <TextBlock Name="selectedYear"/>
+                    <TextBlock Name="selectedRating"/>
+                    </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <Button x:Name="saveToWatchedBtn" 
+                        Click="saveToWatchedBtn_Click"
+                        IsEnabled="False"
+                        Margin="0,0,2,0">Save to Watched</Button>
+                <Button x:Name="saveToWishdBtn"
+                        IsEnabled="False"
+                        Click="saveToWishdBtn_Click"
+                        Margin="2,0,0,0">Save to Wishlist</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
