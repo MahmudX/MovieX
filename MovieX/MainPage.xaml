@@ -5,7 +5,8 @@
     xmlns:local="using:MovieX"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:muxc="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    mc:Ignorable="d" RequestedTheme="Default"
+    mc:Ignorable="d" 
+    RequestedTheme="Dark"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <VisualStateManager.VisualStateGroups>
         <VisualStateGroup>
@@ -21,11 +22,17 @@
     </VisualStateManager.VisualStateGroups >
 
     <muxc:NavigationView x:Name="navigationBar" 
+                         IsBackButtonVisible="Collapsed"
                          ItemInvoked="navigationBar_ItemInvoked">
         <muxc:NavigationView.MenuItems>
-            <muxc:NavigationViewItem x:Name="searchPage" Content="Search">
+            <muxc:NavigationViewItem x:Name="searchPage" Content="Explore">
                 <muxc:NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Find" />
+                </muxc:NavigationViewItem.Icon>
+            </muxc:NavigationViewItem>
+            <muxc:NavigationViewItem x:Name="manualAdd" Content="Add">
+                <muxc:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Add" />
                 </muxc:NavigationViewItem.Icon>
             </muxc:NavigationViewItem>
             <muxc:NavigationViewItem x:Name="viewPage" Content="Watched Movies">

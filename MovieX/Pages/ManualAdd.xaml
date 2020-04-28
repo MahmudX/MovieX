@@ -1,0 +1,72 @@
+﻿<Page
+    x:Class="MovieX.Pages.ManualAdd"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieX.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <ScrollViewer>
+        <Grid Margin="2,30,2,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="2,0">
+                <TextBlock Text="Add movie to list"
+                       FontSize="50"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Margin="2,0"
+                        HorizontalAlignment="Left">
+                <TextBox x:Name="titletext"
+                         Header="Title" Margin="3"
+                         Width="500"                         
+                         TextChanged="titletext_TextChanged"
+                         HorizontalAlignment="Left"/>
+                <TextBox x:Name="genreText" 
+                         Header="Genre" Margin="3"
+                         Width="500"
+                         HorizontalAlignment="Left"/>
+                <TextBox x:Name="castText" 
+                         Header="Cast" Margin="3"
+                         Width="500"
+                         HorizontalAlignment="Left"/>
+                <ComboBox x:Name="typeText" Header="Type"  Width="200"
+                          SelectedIndex="0" Margin="3"
+                          HorizontalAlignment="Left">
+                    <x:String>Movie</x:String>
+                    <x:String>Serial</x:String>
+                    <x:String>Other</x:String>
+                </ComboBox>
+                <TextBox x:Name="yearText"
+                         Header="Year" Margin="3"
+                         Width="100" MaxLength="4"
+                         InputScope="DateYear"
+                         TextChanged="TextBox_TextChanged"
+                         HorizontalAlignment="Left"/>
+                <TextBox x:Name="durationText" 
+                         Header="Duration (m)" Margin="3"
+                         MaxLength="4"
+                         TextChanged="durationText_TextChanged"
+                         Width="100" InputScope="FormulaNumber"
+                         HorizontalAlignment="Left"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button x:Name="savewatchedbtn"
+                        Margin="3,3" 
+                        IsEnabled="False"
+                        Click="savewatchedbtn_Click">
+                    Watched
+                </Button>
+                <Button x:Name="savewishedbtn"
+                        Margin="3,3"
+                        IsEnabled="False"
+                        Click="savewishedbtn_Click">
+                    Wished
+                </Button>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

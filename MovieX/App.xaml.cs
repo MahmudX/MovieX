@@ -14,7 +14,7 @@ namespace MovieX
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            DataAccess.InitializeMovieDatabase();
+            DataAccess.InitializeMovieDatabase();            
         }
 
         /// <summary>

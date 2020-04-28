@@ -8,7 +8,68 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Margin="2,30,2,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10,2,10,9">
+            <TextBlock Text="Other"
+                       Margin="2"
+                       FontSize="20"
+                       Padding="0,0,0,10"/>
+            <ToggleSwitch Header="Theme"
+                          OnContent="Dark"
+                          Margin="2"
+                          x:Name="appTheme"
+                          Toggled="appTheme_Toggled"
+                          OffContent="Light"/>
+        </StackPanel>
 
+        <!--Save Setting-->
+        <StackPanel Margin="10,2,10,9"
+                    Grid.Row="1" 
+                    Orientation="Horizontal">
+            <Button x:Name="saveSettingButton"
+                        Content="Save Setting"
+                        IsEnabled="False"
+                        Click="saveSettingButton_Click"/>
+        </StackPanel>
+
+        <!--About-->
+        <StackPanel Margin="10,10,10,10"
+                    Grid.Row="2" 
+                    Grid.RowSpan="2">
+            <TextBlock Text="About"
+                           FontSize="20"
+                           Margin="2,2,2,10"/>
+            <RichTextBlock SelectionHighlightColor="Green"
+                               Width="400"
+                               IsTextSelectionEnabled="True"
+                               HorizontalAlignment="Left">
+                <Paragraph>
+                    This app is the institute side tool for the app ClassAID. 
+                        It is designed to create, edit and update class routine and upload 
+                        to the main server.
+                </Paragraph>
+                <Paragraph Margin="0,2">
+                    In other hand, ClassAID is designed to help students and 
+                        teachers to collaborate, track their progress 
+                        and making daily school life easier in many ways.
+                </Paragraph>
+                <Paragraph Margin="0,5">
+                    Copyright (c)
+                    <Hyperlink NavigateUri="http://nishadol.com/">Nishadol</Hyperlink> Corporation. All rights reserved.
+                </Paragraph>
+                <Paragraph Margin="0,5">
+                    Send feedback at
+                    <Hyperlink NavigateUri="mailto:feedback@nishadol.com">feedback@nishadol.com</Hyperlink>
+                </Paragraph>
+                <Paragraph>
+                </Paragraph>
+            </RichTextBlock>
+
+        </StackPanel>
     </Grid>
 </Page>

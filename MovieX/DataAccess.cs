@@ -110,7 +110,7 @@ namespace MovieX
 
                 db.Open();
                 SqliteCommand selectCommand = new SqliteCommand
-                    (string.Format("SELECT * from {0}  ORDER BY \"Title\"", movieTable), db);
+                    (string.Format("SELECT * from {0} ORDER BY \"Title\"", movieTable), db);
                 SqliteDataReader query = selectCommand.ExecuteReader();
                 MovieDataModel movie;
                 while (query.Read())
@@ -168,7 +168,7 @@ namespace MovieX
             {
                 db.Open();
                 SqliteCommand selectCommand = new SqliteCommand
-                    (string.Format("SELECT * from {0} ORDER BY \"Category\" Asc", filter.ToString()), db);
+                    (string.Format("SELECT * from {0}", filter.ToString()), db);
                 SqliteDataReader query = selectCommand.ExecuteReader();
                 string movie;
                 while (query.Read())
@@ -178,6 +178,7 @@ namespace MovieX
                 }
                 db.Close();
             }
+            categories.Sort();
             return categories;
         }
         public enum MovieTable

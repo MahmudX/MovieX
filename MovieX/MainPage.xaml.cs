@@ -29,6 +29,14 @@ namespace MovieX
             {
                 contentFrame.Navigate(typeof(WishedMovies));
             }
+            else if (sender.SelectedItem == sender.SettingsItem)
+            {
+                contentFrame.Navigate(typeof(Settings));
+            }
+            else if (sender.SelectedItem == manualAdd)
+            {
+                contentFrame.Navigate(typeof(ManualAdd));
+            }
         }
     }
 }

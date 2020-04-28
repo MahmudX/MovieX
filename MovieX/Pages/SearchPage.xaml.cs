@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Services.Store;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -61,6 +57,9 @@ namespace MovieX.Pages
                 saveToWishdBtn.IsEnabled = true;
                 saveToWatchedBtn.Visibility = Visibility.Visible;
                 saveToWishdBtn.Visibility = Visibility.Visible;
+                plotLabel.Visibility = Visibility.Visible;
+                yearLabel.Visibility = Visibility.Visible;
+                scoreLabel.Visibility = Visibility.Visible;
             }
             catch (Exception) { }
         }
