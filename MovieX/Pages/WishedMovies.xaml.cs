@@ -1,25 +1,33 @@
-﻿using Caliburn.Micro;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace MovieX.Pages
 {
-    public sealed partial class MovieViewPage : Page
+    public sealed partial class WishedMovies : Page
     {
         public List<MovieDataModel> Movies { get; set; }
-        public MovieViewPage()
+        public WishedMovies()
         {
             this.InitializeComponent();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             Movies = await Task.Run(() =>
-                DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies));
+                DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies));
             var categories = await Task.Run(() =>
                 DataAccess.GetFilterNames(DataAccess.FilterTable.CategoryTable));
             var years = await Task.Run(() =>
@@ -72,8 +80,8 @@ namespace MovieX.Pages
         private void itemDeleteBtn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             var item = (MovieDataModel)MovieDataGrid.SelectedItem;
-            DataAccess.DeleteMovieAsync(item, DataAccess.MovieTable.WatchedMovies);
-            Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies);
+            DataAccess.DeleteMovieAsync(item,DataAccess.MovieTable.WishedMovies);
+            Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies);
             MovieDataGrid.ItemsSource = Movies;
         }
         private async void fetchMissingDatabtn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -90,9 +98,9 @@ namespace MovieX.Pages
                 {
                     m = await MovieApi.GetMovieDataByNameAsync(item.Title);
                 }
-                DataAccess.DeleteMovieAsync(item, DataAccess.MovieTable.WatchedMovies);
-                DataAccess.AddMovieDataAsync(m, DataAccess.MovieTable.WatchedMovies);
-                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies);
+                DataAccess.DeleteMovieAsync(item,DataAccess.MovieTable.WishedMovies);
+                DataAccess.AddMovieDataAsync(m, DataAccess.MovieTable.WishedMovies);
+                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies);
                 MovieDataGrid.ItemsSource = Movies;
             }
             catch
@@ -105,11 +113,11 @@ namespace MovieX.Pages
             string innerText = (string)categoryFilterCombo.SelectedItem;
             if (innerText == "All")
             {
-                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies);
+                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies);
             }
             else
             {
-                Movies = (from movie in DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies)
+                Movies = (from movie in DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies)
                           where movie.Genre.Contains(innerText,
                           StringComparison.OrdinalIgnoreCase)
                           select movie).ToList();
@@ -121,11 +129,11 @@ namespace MovieX.Pages
             string innerText = (string)ratedFilterCombo.SelectedItem;
             if (innerText == "All")
             {
-                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies);
+                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies);
             }
             else
             {
-                Movies = (from movie in DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies)
+                Movies = (from movie in DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies)
                           where movie.Rated.Contains(innerText,
                           StringComparison.OrdinalIgnoreCase)
                           select movie).ToList();
@@ -137,15 +145,24 @@ namespace MovieX.Pages
             string innerText = (string)yearFilterCombo.SelectedItem;
             if (innerText == "All")
             {
-                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies);
+                Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies);
             }
             else
             {
-                Movies = (from movie in DataAccess.GetMovieData(DataAccess.MovieTable.WatchedMovies)
+                Movies = (from movie in DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies)
                           where movie.Year.Contains(innerText,
                           StringComparison.OrdinalIgnoreCase)
                           select movie).ToList();
             }
+            MovieDataGrid.ItemsSource = Movies;
+        }
+
+        private void itemAddtoWatchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (MovieDataModel)MovieDataGrid.SelectedItem;
+            DataAccess.AddMovieDataAsync(item, DataAccess.MovieTable.WatchedMovies);
+            DataAccess.DeleteMovieAsync(item, DataAccess.MovieTable.WishedMovies);
+            Movies = DataAccess.GetMovieData(DataAccess.MovieTable.WishedMovies);
             MovieDataGrid.ItemsSource = Movies;
         }
     }

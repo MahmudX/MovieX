@@ -5,7 +5,7 @@
     xmlns:local="using:MovieX"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:muxc="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    mc:Ignorable="d" RequestedTheme="Light"
+    mc:Ignorable="d" RequestedTheme="Default"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <VisualStateManager.VisualStateGroups>
         <VisualStateGroup>
@@ -20,16 +20,22 @@
         </VisualStateGroup>
     </VisualStateManager.VisualStateGroups >
 
-    <muxc:NavigationView x:Name="navigationBar" ItemInvoked="navigationBar_ItemInvoked">
+    <muxc:NavigationView x:Name="navigationBar" 
+                         ItemInvoked="navigationBar_ItemInvoked">
         <muxc:NavigationView.MenuItems>
             <muxc:NavigationViewItem x:Name="searchPage" Content="Search">
                 <muxc:NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Find" />
                 </muxc:NavigationViewItem.Icon>
             </muxc:NavigationViewItem>
-            <muxc:NavigationViewItem x:Name="viewPage" Content="View Saved">
+            <muxc:NavigationViewItem x:Name="viewPage" Content="Watched Movies">
                 <muxc:NavigationViewItem.Icon>
                     <SymbolIcon Symbol="View" />
+                </muxc:NavigationViewItem.Icon>
+            </muxc:NavigationViewItem>
+            <muxc:NavigationViewItem x:Name="wishedPage" Content="Wished Movies">
+                <muxc:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Save" />
                 </muxc:NavigationViewItem.Icon>
             </muxc:NavigationViewItem>
         </muxc:NavigationView.MenuItems>

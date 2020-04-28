@@ -19,31 +19,50 @@ namespace MovieX.Pages
         }
         private async void searchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            GridResult.SelectedItem = null;
             movieSearchResult = await MovieApi.GetMovieSearchResult(searchBox.Text);
             GridResult.ItemsSource = movieSearchResult.Search;
         }
-
         private void saveToWatchedBtn_Click(object sender, RoutedEventArgs e)
         {
-            DataAccess.AddMovieData(movie);
+            DataAccess.AddMovieDataAsync(movie, DataAccess.MovieTable.WatchedMovies);
+            DataAccess.AddFilterTableAsync(movie.Genre.Split(','), DataAccess.FilterTable.CategoryTable);
+            DataAccess.AddFilterTableAsync(movie.Year.Split(','), DataAccess.FilterTable.YearTable);
+            DataAccess.AddFilterTableAsync(movie.Rated.Split(','), DataAccess.FilterTable.RatedTable);
         }
 
         private void saveToWishdBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            DataAccess.AddMovieDataAsync(movie, DataAccess.MovieTable.WishedMovies);
+            DataAccess.AddFilterTableAsync(movie.Genre.Split(','), DataAccess.FilterTable.CategoryTable);
+            DataAccess.AddFilterTableAsync(movie.Year.Split(','), DataAccess.FilterTable.YearTable);
+            DataAccess.AddFilterTableAsync(movie.Rated.Split(','), DataAccess.FilterTable.RatedTable);
         }
 
         private async void GridResult_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            saveToWatchedBtn.IsEnabled = true;
-            saveToWishdBtn.IsEnabled = true;
+
             var item = (MovieSearchDataModel)GridResult.SelectedItem;
-            movie = await MovieApi.GetMovieDataByIdAsync(item.ImdbId);
-            selectedImage.Source = new BitmapImage(new Uri(movie.Poster, UriKind.Absolute));
-            selectedPlot.Text = movie.Plot;
-            selectedTitle.Text = movie.Title;
-            selectedRating.Text = movie.ImdbRating;
-            selectedYear.Text = movie.Year;
+            try
+            {
+                movie = await MovieApi.GetMovieDataByIdAsync(item.ImdbId);
+                try
+                {
+                    selectedImage.Source = new BitmapImage(new Uri(movie.Poster, UriKind.Absolute));
+                }
+                catch (Exception)
+                {
+                }
+                selectedPlot.Text = movie.Plot;
+                selectedTitle.Text = movie.Title;
+                selectedRating.Text = movie.ImdbRating;
+                selectedYear.Text = movie.Year;
+                saveToWatchedBtn.IsEnabled = true;
+                saveToWishdBtn.IsEnabled = true;
+                saveToWatchedBtn.Visibility = Visibility.Visible;
+                saveToWishdBtn.Visibility = Visibility.Visible;
+            }
+            catch (Exception) { }
         }
     }
 }

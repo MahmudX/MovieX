@@ -25,6 +25,10 @@ namespace MovieX
             {
                 contentFrame.Navigate(typeof(MovieViewPage));
             }
+            else if (sender.SelectedItem == wishedPage)
+            {
+                contentFrame.Navigate(typeof(WishedMovies));
+            }
         }
     }
 }

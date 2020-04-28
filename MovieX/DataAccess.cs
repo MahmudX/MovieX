@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Windows.ApplicationModel.Background;
 using Windows.Storage;
 
 namespace MovieX
@@ -15,37 +16,42 @@ namespace MovieX
         public async static void InitializeMovieDatabase()
         {
             await ApplicationData.Current.LocalFolder.CreateFileAsync("moviesdatabase.db", CreationCollisionOption.OpenIfExists);
-            //await ApplicationData.Current.LocalFolder.CreateFileAsync("moviesdatabase.db", CreationCollisionOption.ReplaceExisting);
+            // await ApplicationData.Current.LocalFolder.CreateFileAsync("moviesdatabase.db", CreationCollisionOption.ReplaceExisting);
             string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "moviesdatabase.db");
             using (SqliteConnection db =
                new SqliteConnection($"Filename={dbpath}"))
             {
                 db.Open();
-                string tableCommand = "CREATE TABLE IF NOT EXISTS \"watchedmovies\" " +
+                string watchedTable = "CREATE TABLE IF NOT EXISTS \"WatchedMovies\" " +
                     "(\"Title\" TEXT," +
-                    "\"Year\"  INTEGER," +
-                    "\"Rated\" TEXT," +
-                    "\"Released\" TEXT," +
-                    "\"Runtime\" TEXT," +
-                    "\"Genre\" TEXT," +
-                    "\"Director\" TEXT," +
-                    "\"Actors\" TEXT," +
-                    "\"Plot\" TEXT UNIQUE," +
-                    "\"Language\" TEXT," +
-                    "\"Country\" TEXT," +
-                    "\"ImdbRating\" TEXT," +
-                    "\"ImageUrl\" TEXT UNIQUE)";
-                //@,@,@IMDb,@ImageUrl
-                //string tableCommand = "CREATE TABLE IF NOT " +
-                //    "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY, " +
-                //    "Text_Entry NVARCHAR(2048) NULL)";
+                    "\"Year\"  INTEGER, \"Rated\" TEXT," +
+                    "\"Released\" TEXT, \"Runtime\" TEXT," +
+                    "\"Genre\" TEXT, \"Director\" TEXT," +
+                    "\"Actors\" TEXT,\"Plot\" TEXT," +
+                    "\"Language\" TEXT,\"Country\" TEXT, \"ImdbRating\" TEXT," +
+                    "\"ImageUrl\" TEXT, \"Type\" TEXT, \"ID\" TEXT UNIQUE)";
+                string wishedTable = watchedTable.Replace("WatchedMovies", "WishedMovies");
 
-                SqliteCommand createTable = new SqliteCommand(tableCommand, db);
+                string categoryTable =
+                    "CREATE TABLE IF NOT EXISTS \"CategoryTable\" (\"Category\" TEXT UNIQUE)";
+                string yearTable =
+                    "CREATE TABLE IF NOT EXISTS \"YearTable\" (\"Year\" TEXT UNIQUE)";
+                string ratedTable =
+                    "CREATE TABLE IF NOT EXISTS \"RatedTable\" (\"Rated\" TEXT UNIQUE)";
+                SqliteCommand createTable = new SqliteCommand(watchedTable, db);
+                createTable.ExecuteReader();
+                createTable = new SqliteCommand(categoryTable, db);
+                createTable.ExecuteReader();
+                createTable = new SqliteCommand(wishedTable, db);
+                createTable.ExecuteReader();
+                createTable = new SqliteCommand(yearTable, db);
+                createTable.ExecuteReader();
+                createTable = new SqliteCommand(ratedTable, db);
                 createTable.ExecuteReader();
                 db.Close();
             }
         }
-        public static void AddMovieData(MovieDataModel movie)
+        public async static void AddMovieDataAsync(MovieDataModel movie, MovieTable table)
         {
             string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "moviesdatabase.db");
             using (SqliteConnection db =
@@ -54,7 +60,7 @@ namespace MovieX
                 db.Open();
                 SqliteCommand insertCommand = new SqliteCommand();
                 insertCommand.Connection = db;
-                insertCommand.CommandText = "INSERT OR REPLACE INTO watchedmovies VALUES (@Title,@Year,@Rated,@Released,@Runtime,@Genre,@Director,@Actors,@Plot,@Language,@Country,@IMDb,@ImageUrl);";
+                insertCommand.CommandText = string.Format("INSERT OR REPLACE INTO {0} VALUES (@Title,@Year,@Rated,@Released,@Runtime,@Genre,@Director,@Actors,@Plot,@Language,@Country,@IMDb,@ImageUrl,@Type,@ID);", table.ToString());
                 insertCommand.Parameters.AddWithValue("@Title", movie.Title);
                 insertCommand.Parameters.AddWithValue("@Year", movie.Year);
                 insertCommand.Parameters.AddWithValue("@Rated", movie.Rated);
@@ -68,25 +74,43 @@ namespace MovieX
                 insertCommand.Parameters.AddWithValue("@Country", movie.Country);
                 insertCommand.Parameters.AddWithValue("@IMDb", movie.ImdbRating);
                 insertCommand.Parameters.AddWithValue("@ImageUrl", movie.Poster);
-                insertCommand.ExecuteReader();
+                insertCommand.Parameters.AddWithValue("@Type", movie.Type);
+                insertCommand.Parameters.AddWithValue("@ID", movie.imdbID);
+                await Task.Run(() => insertCommand.ExecuteReader());
                 db.Close();
             }
         }
-        public static ObservableCollection<MovieDataModel> GetMovieData(string sortby = "Title")
+        public static async void AddFilterTableAsync(string[] genres, FilterTable filterTable)
         {
-            ObservableCollection<MovieDataModel> entries = new ObservableCollection<MovieDataModel>();
+            string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "moviesdatabase.db");
+            using (SqliteConnection db =
+              new SqliteConnection($"Filename={dbpath}"))
+            {
+                foreach (var genre in genres)
+                {
+                    db.Open();
+                    SqliteCommand insertCommand = new SqliteCommand();
+                    insertCommand.Connection = db;
+                    insertCommand.CommandText =
+                        string.Format("INSERT OR REPLACE INTO {0} VALUES (@data);", filterTable.ToString());
+                    insertCommand.Parameters.AddWithValue("@data", genre.Trim());
+                    await Task.Run(() => insertCommand.ExecuteReader());
+                    db.Close();
+                }
+            }
+        }
+        public static List<MovieDataModel> GetMovieData(MovieTable movieTable)
+        {
+            List<MovieDataModel> entries = new List<MovieDataModel>();
 
             string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "moviesdatabase.db");
             using (SqliteConnection db =
                new SqliteConnection($"Filename={dbpath}"))
             {
+
                 db.Open();
-
                 SqliteCommand selectCommand = new SqliteCommand
-                    (string.Format("SELECT * from watchedmovies ORDER BY \"{0}\" Asc", sortby), db);
-
-                //SqliteCommand tableCommand = new SqliteCommand("SELECT * FROM watchedmovies",db);
-                //tableCommand.ExecuteReader();
+                    (string.Format("SELECT * from {0}  ORDER BY \"Title\"", movieTable), db);
                 SqliteDataReader query = selectCommand.ExecuteReader();
                 MovieDataModel movie;
                 while (query.Read())
@@ -105,17 +129,18 @@ namespace MovieX
                         Language = query.GetString(9),
                         Country = query.GetString(10),
                         ImdbRating = query.GetString(11),
-                        Poster = query.GetString(12)
+                        Poster = query.GetString(12),
+                        Type = query.GetString(13),
+                        imdbID = query.GetString(14)
                     };
                     entries.Add(movie);
                 }
 
                 db.Close();
             }
-
             return entries;
         }
-        public static void DeleteMovie(MovieDataModel movie)
+        public async static void DeleteMovieAsync(MovieDataModel movie, MovieTable table)
         {
             string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "moviesdatabase.db");
             using (SqliteConnection db =
@@ -124,14 +149,44 @@ namespace MovieX
                 db.Open();
                 SqliteCommand insertCommand = new SqliteCommand();
                 insertCommand.Connection = db;
-                insertCommand.CommandText = "DELETE from watchedmovies WHERE \"Title\" = @Title AND " +
-                    "\"Runtime\" = @Runtime AND \"Director\" = @Director";
+                insertCommand.CommandText = string.Format("DELETE from {0} WHERE \"Title\" = @Title AND " +
+                    "\"Runtime\" = @Runtime AND \"Director\" = @Director", table);
                 insertCommand.Parameters.AddWithValue("@Title", movie.Title);
                 insertCommand.Parameters.AddWithValue("@Runtime", movie.Runtime);
                 insertCommand.Parameters.AddWithValue("@Director", movie.Director);
-                insertCommand.ExecuteReader();
+                await Task.Run(() => insertCommand.ExecuteReader());
                 db.Close();
             }
+        }
+        public static List<string> GetFilterNames(FilterTable filter)
+        {
+            List<string> categories = new List<string>();
+
+            string dbpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "moviesdatabase.db");
+            using (SqliteConnection db =
+               new SqliteConnection($"Filename={dbpath}"))
+            {
+                db.Open();
+                SqliteCommand selectCommand = new SqliteCommand
+                    (string.Format("SELECT * from {0} ORDER BY \"Category\" Asc", filter.ToString()), db);
+                SqliteDataReader query = selectCommand.ExecuteReader();
+                string movie;
+                while (query.Read())
+                {
+                    movie = query.GetString(0);
+                    categories.Add(movie);
+                }
+                db.Close();
+            }
+            return categories;
+        }
+        public enum MovieTable
+        {
+            WishedMovies, WatchedMovies
+        }
+        public enum FilterTable
+        {
+            CategoryTable, YearTable, RatedTable
         }
     }
 }
