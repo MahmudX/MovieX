@@ -11,31 +11,27 @@
     <Grid Margin="2,30,2,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="10,2,10,9">
-            <TextBlock Text="Other"
+            <TextBlock Text="Options"
                        Margin="2"
                        FontSize="20"
                        Padding="0,0,0,10"/>
-            <ToggleSwitch Header="Theme"
-                          OnContent="Dark"
-                          Margin="2"
-                          x:Name="appTheme"
-                          Toggled="appTheme_Toggled"
-                          OffContent="Light"/>
+            <TextBlock Margin="2"
+                       Padding="0,0,0,10"
+                       TextWrapping="WrapWholeWords"
+                       MaxWidth="500"
+                       HorizontalAlignment="Left">
+                There is nothing here yet but who knows, maybe something 
+                cool will be here within next update. 
+                Life is full of possibilities.
+            </TextBlock>
         </StackPanel>
 
         <!--Save Setting-->
-        <StackPanel Margin="10,2,10,9"
-                    Grid.Row="1" 
-                    Orientation="Horizontal">
-            <Button x:Name="saveSettingButton"
-                        Content="Save Setting"
-                        IsEnabled="False"
-                        Click="saveSettingButton_Click"/>
-        </StackPanel>
+        
 
         <!--About-->
         <StackPanel Margin="10,10,10,10"
@@ -48,23 +44,26 @@
                                Width="400"
                                IsTextSelectionEnabled="True"
                                HorizontalAlignment="Left">
-                <Paragraph>
-                    This app is the institute side tool for the app ClassAID. 
-                        It is designed to create, edit and update class routine and upload 
-                        to the main server.
-                </Paragraph>
                 <Paragraph Margin="0,2">
-                    In other hand, ClassAID is designed to help students and 
-                        teachers to collaborate, track their progress 
-                        and making daily school life easier in many ways.
+                    I created this app to benefit me and others in COVID 19 
+                    outbreak. I was feeling bored and passed my time by 
+                    making this.
                 </Paragraph>
                 <Paragraph Margin="0,5">
                     Copyright (c)
-                    <Hyperlink NavigateUri="http://nishadol.com/">Nishadol</Hyperlink> Corporation. All rights reserved.
+                    <Hyperlink NavigateUri="http://mahmudx.com/">Mahmudul Hasan</Hyperlink> All rights reserved.
                 </Paragraph>
                 <Paragraph Margin="0,5">
                     Send feedback at
-                    <Hyperlink NavigateUri="mailto:feedback@nishadol.com">feedback@nishadol.com</Hyperlink>
+                    <Hyperlink NavigateUri="mailto:mahmudnotes@outlook.com">mahmudnotes@outlook.com</Hyperlink>
+                </Paragraph>
+                <Paragraph Margin="0,5">
+                    Read blogs at -
+                    <Hyperlink NavigateUri="http://mahmudnotes.com/">mahmudNotes</Hyperlink>
+                </Paragraph>
+                <Paragraph Margin="0,5">
+                    Visit projects playground -
+                    <Hyperlink NavigateUri="http://mahmudx.azurewebsites.net/">MahmudX</Hyperlink>
                 </Paragraph>
                 <Paragraph>
                 </Paragraph>

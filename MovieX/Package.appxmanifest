@@ -8,8 +8,8 @@
 
   <Identity
     Name="746542e9-897c-4cef-a3fa-ba1e8551d9b4"
-    Publisher="CN=Mahmud"
-    Version="1.0.0.0" />
+    Publisher="CN=Mahmudul Hasan"
+    Version="1.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="746542e9-897c-4cef-a3fa-ba1e8551d9b4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

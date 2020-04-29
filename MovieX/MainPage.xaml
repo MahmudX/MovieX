@@ -22,6 +22,7 @@
     </VisualStateManager.VisualStateGroups >
 
     <muxc:NavigationView x:Name="navigationBar" 
+                         IsSettingsVisible="False"
                          IsBackButtonVisible="Collapsed"
                          ItemInvoked="navigationBar_ItemInvoked">
         <muxc:NavigationView.MenuItems>
@@ -43,6 +44,12 @@
             <muxc:NavigationViewItem x:Name="wishedPage" Content="Wished Movies">
                 <muxc:NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Save" />
+                </muxc:NavigationViewItem.Icon>
+            </muxc:NavigationViewItem>
+            <muxc:NavigationViewItem x:Name="optionPage" 
+                                     Content="Options">
+                <muxc:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Setting" />
                 </muxc:NavigationViewItem.Icon>
             </muxc:NavigationViewItem>
         </muxc:NavigationView.MenuItems>
